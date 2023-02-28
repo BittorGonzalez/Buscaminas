@@ -11,6 +11,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.function.Consumer;
@@ -176,7 +178,7 @@ public class Juego extends JFrame implements ActionListener {
 					
 				}
 				
-				eliminarActionListener();
+				eliminarMouseListener();
 	
 				botonPartida.setIcon(new ImageIcon(Juego.class.getResource("/iconos/caraMuerta.PNG")));
 				
@@ -188,7 +190,7 @@ public class Juego extends JFrame implements ActionListener {
 
 			@Override
 			public void accept(ArrayList<Casilla> t) {
-				eliminarActionListener();
+				eliminarMouseListener();
 				
 				botonPartida.setIcon(new ImageIcon(Juego.class.getResource("/iconos/caraGanar.PNG")));
 			}
@@ -258,19 +260,8 @@ public class Juego extends JFrame implements ActionListener {
 					botonesTablero[i][j].setBounds(botonesTablero[i-1][j].getX(), botonesTablero[i-1][j].getY()+botonesTablero[i-1][j].getHeight(), ancho, alto);
 				}
 				
-				botonesTablero[i][j].addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						
-						JButton btn = (JButton)e.getSource();
-						String[] coordernada = btn.getName().split(",");
-						int posFila = Integer.parseInt(coordernada[0]);
-						int posColumna = Integer.parseInt(coordernada[1]);
-						t.seleccionarCasilla(posFila, posColumna);
-					}
-					
-				});
+				botonesTablero[i][j].addMouseListener(mouseListener);
+				
 				campoJuego.add(botonesTablero[i][j]);
 			}
 			
@@ -278,7 +269,7 @@ public class Juego extends JFrame implements ActionListener {
 		}
 	}
 	
-	public void eliminarActionListener() {
+	public void eliminarMouseListener() {
 		ArrayList<JButton> listaAux = new ArrayList<JButton>();
 		
 		for(int i = 0; i<botonesTablero.length; i++) {
@@ -288,8 +279,8 @@ public class Juego extends JFrame implements ActionListener {
 		}
 		
 		for (JButton currentButton: listaAux) {
-		    for (ActionListener al: currentButton.getActionListeners()) {
-		        currentButton.removeActionListener(al);
+		    for (MouseListener al: currentButton.getMouseListeners()) {
+		        currentButton.removeMouseListener(al);
 		    }
 		}
 	}
@@ -314,9 +305,67 @@ public class Juego extends JFrame implements ActionListener {
 			juegoNuevo();
 		}
 		
+	
+}
+	
+	 MouseListener mouseListener= new MouseListener() {
+
+
+	        @Override
+	        public void mouseClicked(MouseEvent e) {
+	        	
+	            JButton btn =(JButton) e.getSource();
+	           
+	            
+	            if(e.getButton() == 3 ) {
+	            
+	            	
+	            	  btn.setIcon(new ImageIcon("src\\iconos\\flag.png"));
+	         
+	  	           
+	            }else {
+	            	
+					String[] coordernada = btn.getName().split(",");
+					int posFila = Integer.parseInt(coordernada[0]);
+					int posColumna = Integer.parseInt(coordernada[1]);
+					t.seleccionarCasilla(posFila, posColumna);
+	            }
+	          
+	        }
+
+	
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+	    };
+
 		
-		
-	}
+	
+
+
 
 	public int getNumFilas() {
 		return numFilas;
